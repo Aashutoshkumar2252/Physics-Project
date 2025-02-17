@@ -29,6 +29,18 @@ const planets = [
 
 planets.forEach(planet => scene.add(planet));
 
+// Create Orbits
+const createOrbit = (radius) => {
+    const geometry = new THREE.RingGeometry(radius - 0.1, radius + 0.1, 64);
+    const material = new THREE.MeshBasicMaterial({ color: 0x888888, side: THREE.DoubleSide });
+    const orbit = new THREE.Mesh(geometry, material);
+    orbit.rotation.x = Math.PI / 2;
+    return orbit;
+};
+
+const orbits = [7, 10, 15, 20].map(radius => createOrbit(radius));
+orbits.forEach(orbit => scene.add(orbit));
+
 // Initialize variables for animation
 let angles = [0, 0, 0, 0];
 
@@ -39,8 +51,8 @@ const animate = () => {
     // Rotate planets
     angles = angles.map((angle, index) => {
         angle += 0.01 * (index + 1); // Adjust speed based on planet's distance
-        planets[index].position.x = (7 + index * 5) * Math.cos(angle);
-        planets[index].position.z = (7 + index * 5) * Math.sin(angle);
+        planets[index].position.x = orbits[index].geometry.parameters.innerRadius * Math.cos(angle);
+        planets[index].position.z = orbits[index].geometry.parameters.innerRadius * Math.sin(angle);
         return angle;
     });
 
