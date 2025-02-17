@@ -20,23 +20,32 @@ const createPlanet = (size, color, distance) => {
     return planet;
 };
 
-const earth = createPlanet(1, 0x0000ff, 10);
-scene.add(earth);
+const planets = [
+    createPlanet(0.9, 0xffa500, 7),  // Venus
+    createPlanet(1, 0x0000ff, 10),   // Earth
+    createPlanet(0.5, 0xff0000, 15), // Mars
+    createPlanet(2, 0xffd700, 20)    // Jupiter
+];
+
+planets.forEach(planet => scene.add(planet));
 
 // Initialize variables for animation
-let angleEarth = 0;
+let angles = [0, 0, 0, 0];
 
 // Animate function
 const animate = () => {
     requestAnimationFrame(animate);
 
-    // Rotate Earth
-    angleEarth += 0.01;
-    earth.position.x = 10 * Math.cos(angleEarth);
-    earth.position.z = 10 * Math.sin(angleEarth);
+    // Rotate planets
+    angles = angles.map((angle, index) => {
+        angle += 0.01 * (index + 1); // Adjust speed based on planet's distance
+        planets[index].position.x = (7 + index * 5) * Math.cos(angle);
+        planets[index].position.z = (7 + index * 5) * Math.sin(angle);
+        return angle;
+    });
 
     renderer.render(scene, camera);
 };
 
-camera.position.z = 20;
+camera.position.z = 30;
 animate();
